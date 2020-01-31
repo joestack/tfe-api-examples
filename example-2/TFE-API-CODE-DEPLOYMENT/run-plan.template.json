@@ -1,0 +1,23 @@
+{
+  "data": {
+    "attributes": {
+      "is-destroy":false,
+      "message": "Triggered by API"
+    },
+    "type":"runs",
+    "relationships": {
+      "workspace": {
+        "data": {
+          "type": "workspaces",
+          "id": "workspace_id"
+        }
+      },
+      "configuration-version": {
+        "data": {
+          "type": "configuration-versions",
+          "id": "configversion_id"
+        }
+      }
+    }
+  }
+}

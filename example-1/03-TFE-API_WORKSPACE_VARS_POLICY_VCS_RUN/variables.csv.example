@@ -1,0 +1,7 @@
+key_name,joestack,terraform,false,false
+instance_type,t2.small,terraform,false,false
+name,test,terraform,false,false
+CONFIRM_DESTROY,1,env,false,false
+AWS_ACCESS_KEY_ID,ALLEMEINEENTCHEN,env,false,true
+AWS_SECRET_ACCESS_KEY,5chw1mm3naufd3ms33,env,false,true
+AWS_REGION,eu-west-1,env,false,false

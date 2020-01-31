@@ -1,0 +1,17 @@
+{
+  "data": {
+    "type": "policy-sets",
+    "attributes": {
+      "name": "production",
+      "description": "This set contains policies that should be checked on all production infrastructure workspaces.",
+      "global": false,
+      "policies-path": "/aws",
+      "vcs-repo": {
+        "branch": "master",
+        "identifier": "joestack/tfc-policy-sets",
+        "ingress-submodules": false,
+        "oauth-token-id": "oauth_token"
+      }
+    }
+  }
+}
