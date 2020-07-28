@@ -74,6 +74,16 @@ echo "Variables have been assigned" && echo
 # 05) ASSIGN VCS REPO TO WORKSPACE AND TRIGGER PLAN & APPLY #
 #############################################################
 
+# Request the TF[C/E] VCS-Provider oauth-token
+oauth_token=$(
+  curl -Ss \
+       --header "Authorization: Bearer $tfc_token" \
+       --header "Content-Type: application/vnd.api+json" \
+       --request GET \
+       "https://${address}/api/v2/organizations/${organization}/oauth-clients" |\
+  jq -r ".data[] | select (.attributes.name == \"$vcs_provider\") | .relationships.\"oauth-tokens\".data[].id "
+)
+
 #Setup VCS repo and additional parameters (auto-apply, queue run in workspace-vcs.json
 sed -e "s/placeholder/$workspace/" \
     -e "s/vcs_repo/$vcs_repo/" \
