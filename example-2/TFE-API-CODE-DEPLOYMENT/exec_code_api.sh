@@ -137,35 +137,44 @@ echo "Run-ID: $run_id" && echo
 #######################################################
 
 continue=1
-while [ $continue -ne 0 ]
-do
-  # check status 
-  check_status=$(
-    curl -Ss \
-         --header "Authorization: Bearer $tfc_token" \
-         --header "Content-Type: application/vnd.api+json" \
-         "https://${address}/api/v2/runs/${run_id}" |\
-    jq -r '.data.attributes.status'
-  )
 
-  if [[ "$check_status" == "cost_estimated" ]] ; then
-    continue=0
-    # Do the apply
-    echo "cost estimated. Doing apply..."
-    apply_result=$(
-      curl -Ss \
-           --header "Authorization: Bearer $tfc_token" \
-           --header "Content-Type: application/vnd.api+json" \
-           --data @apply.json \
-           "https://${address}/api/v2/runs/${run_id}/actions/apply"
-    )
-  elif [[ "$check_status" == "errored" ]]; then
-    echo "Plan errored or hard-mandatory policy failed"
-    continue=0
-  else
-    echo "current status: $check_status"
-    sleep 5
-  fi
-done
-
-
+    while [ $continue -ne 0 ]
+      do
+        # check status 
+        check_status=$(
+          curl \
+          --header "Authorization: Bearer $TFC_TOKEN" \
+          --header "Content-Type: application/vnd.api+json" \
+          "https://${TFC_ADDR}/api/v2/runs/${run_id}" |\
+          jq -r '.data.attributes.status'
+          )
+          if [[ "$check_status" == "cost_estimated" ]] ; then
+            continue=0
+            echo "cost estimated. Doing apply..."
+            apply_result=$(
+              curl -Ss \
+              --header "Authorization: Bearer $TFC_TOKEN" \
+              --header "Content-Type: application/vnd.api+json" \
+              --data @apply.json \
+              "https://${TFC_ADDR}/api/v2/runs/${run_id}/actions/apply"
+              )
+          elif [[ "$check_status" == "errored" ]]; then
+            echo "Plan errored or hard-mandatory policy failed"
+            exit 1
+          elif [[ "$check_status" == "discarded" ]]; then
+            echo "Plan discarded or cancelled"
+            exit 1
+          elif [[ "$check_status" == "canceled" ]]; then
+            echo "Plan discarded or cancelled"
+            exit 1
+          elif [[ "$check_status" == "force_canceled" ]]; then
+            echo "Plan discarded or cancelled"
+            exit 1
+          elif [[ "$check_status" == "applied" ]]; then
+            echo "Plan applied"
+            exit 0
+          else
+            echo "current status: $check_status"
+            sleep 5
+          fi
+    done    
